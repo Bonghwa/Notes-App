@@ -43,8 +43,8 @@ function showNotes() {
         <div class="note-cta">
             <p class="note-counter">Note ${index + 1}</p>
             <div class="note-cta-btn">
-                <button class="note-btn" id="${index}"><i class="fas fa-trash"></i>Delete</button>
-                <button class="note-btn edit-btn" id="${index}"><i class="fas fa-edit"></i>Edit</button>
+                <button class="note-btn" id="${index}" onClick="deleteNote(this.id)"><i class="fas fa-trash"></i>Delete</button>
+                <button class="note-btn edit-btn" id="${index}" onClick="editNote(this.id)"><i class="fas fa-edit"></i>Edit</button>
             </div>
         </div>
         <hr />
@@ -60,6 +60,35 @@ function showNotes() {
   } else {
     noteElm.innerHTML = `<p>No notes added. Please add a note.</p>`;
   }
+}
+
+function deleteNote(index) {
+  const confirmDel = confirm('Delete this note.');
+  if (confirmDel) {
+    getNotes();
+    notesObj.splice(index, 1);
+    localStorage.setItem('notes', JSON.stringify(notesObj));
+    showNotes();
+  }
+}
+
+clear.addEventListener('click', () => {
+  localStorage.clear();
+  showNotes();
+});
+
+function editNote(index) {
+  if (noteTitle.value !== '' || noteText.value !== '') {
+    return alert('Please clear the form before editing.');
+  }
+
+  getNotes();
+  noteTitle.value = notesObj[index].title;
+  noteText.value = notesObj[index].text;
+
+  notesObj.splice(index, 1);
+  localStorage.setItem('notes', JSON.stringify(notesObj));
+  showNotes();
 }
 
 showNotes();
